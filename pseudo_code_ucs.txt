@@ -1,0 +1,45 @@
+FUNCTION ucs(graph, start_node, goal_node):
+    
+    visited_vertex <- create_empty_set() #initial state, cost masih 0
+
+    queue <- create_priority_queue() #membuat priority queue, dengan item adalah tuple 
+
+    queue.put( (0, [start_node]) ) #titik awal dengan cost masih 0
+
+    WHILE queue is not empty: #loop saat queue masih ada 
+
+        (weight, path) <- queue.get() #ambil item dari queue dengan cost paling rendah 
+
+        //    Dapatkan node terakhir (node saat ini) dari path tersebut.
+        vertex <- get_last_element_from(path) #ambil node terakhir dari path saat ini.
+
+        IF vertex is NOT IN visited_vertex: #jika vertex belom dieksplor 
+
+            visited_vertex.add(vertex)#tambahkan vertex ke sudah dieksplor 
+
+            IF vertex is equal to goal_node: #cek vertex = tujuan ?
+
+                path.append(weight) #jika iya, tambahkan beban ke akhir list path 
+              
+                RETURN path #Kembalikan path 
+            ENDIF
+
+            FOR each (neighbor, distance) in graph[vertex]: #jika bukan tujuan, eksplor cabang dari vertex 
+
+                IF neighbor is NOT IN visited_vertex: #cek cabang belum dikunjungi
+          
+                    new_weight <- weight + distance #total beban baru untuk mencapai cabang 
+                
+                    temp_path <- copy(path) #buat salinan path
+                    
+                    temp_path.append(neighbor) #add cabang ke salinan path 
+                  
+                    queue.put( (new_weight, temp_path) ) #Masukkan path baru ke queue untuk dieksplor
+                ENDIF
+            ENDFOR
+        ENDIF
+    ENDWHILE
+
+    RETURN null #tujuan tidak dapat dicapai atau tidak ditemukan.
+
+ENDFUNCTION
